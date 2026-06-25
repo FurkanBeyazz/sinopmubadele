@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String
+  heroImage String?
+  images    String?  // JSON string for array of image URLs (SQLite workaround for String[])
+  panoramaImage String? // 360 virtual tour image URL
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+model Gallery {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  coverImage  String?
+  slug        String         @unique
+  published   Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  images      GalleryImage[]
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  galleryId String
+  gallery   Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Announcement {
+  id            String   @id @default(cuid())
+  title         String
+  content       String   // HTML from Tiptap/Quill
+  excerpt       String?
+  featuredImage String?
+  images        String?  @default("[]") // Gallery images JSON string
+  category      String   @default("Duyuru")
+  author        String?
+  published     Boolean  @default(false)
+  date          DateTime @default(now())
+  views         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model BoardMember {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  image     String?
+  bio       String?
+  order     Int      @default(0)
+  type      String   @default("birim") // baskan | yardimci | yonetim | danisman | denetim | birim
+  status    String   @default("asil")  // asil | yedek
+  parentId  String?
+  parent    BoardMember?  @relation("Hierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children  BoardMember[] @relation("Hierarchy")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeroSlide {
+  id        String   @id @default(cuid())
+  title     String?
+  subtitle  String?
+  image     String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Memory {
+  id          String   @id @default(cuid())
+  visitorName String
+  image       String
+  note        String?
+  createdAt   DateTime @default(now())
+}
+
+// Atatürk Köşesi sayfası için admin'den yönetilen içerik (tek satır / singleton)
+model AtaturkSetting {
+  id        String   @id @default("singleton")
+  heroImage String?
+  gallery   String?  // JSON: [{ image, title, subtitle }]
+  songs     String?  // JSON: [{ title, subtitle, youtube }]
+  updatedAt DateTime @updatedAt
+}

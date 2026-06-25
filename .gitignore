@@ -1,0 +1,59 @@
+# Bağımlılıklar
+/node_modules
+/.pnp
+.pnp.js
+
+# Test / coverage
+/coverage
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+
+# Production
+/build
+/dist
+dist-ssr
+
+# Ortam değişkenleri (ASLA commit etmeyin!)
+.env
+.env*.local
+.env.production
+
+# Veritabanı ve yedekler (sunucuya ayrıca taşınır)
+/prisma/dev.db
+/prisma/dev.db-journal
+/backups
+
+# Yüklenen dosyalar (yerel)
+/public/uploads
+
+# Loglar
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editör / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.local
+
+# Proje dışı indirilmiş kaynaklar
+/animasyonekleme
+/testwebtarayici
+/three.js-dev
+/*.zip
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo

@@ -1,0 +1,244 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colors - "Premium Heritage" Palette */
+  --bg-warm: #fdfbf7;
+  --primary-red: #8B0000;
+  /* Deep Bordeaux */
+  --primary-gold: #C5A059;
+  /* Matte Gold */
+  --primary-blue: #1E3A5F;
+  /* Legacy/Accent */
+
+  --text-main: #1A202C;
+  /* Dark Anthracite */
+  --text-muted: #4A5568;
+  /* Metallic Gray */
+  --border-muted: #e2e8f0;
+
+  --transition-museum: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-warm);
+    color: var(--text-main);
+    font-family: var(--font-inter), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Typography Defaults for Premium Feel */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-playfair), serif;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  .serif {
+    font-family: var(--font-playfair), serif;
+  }
+}
+
+/* Specific Header Overrides if needed */
+h1 {
+  font-size: 4rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  /* color: var(--text-main); Inherited from group selector */
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 8rem;
+  }
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  h2 {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 5rem;
+  }
+}
+
+/* Layout Utilities */
+.container-heritage {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .container-heritage {
+    padding: 0 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-heritage {
+    padding: 0 5rem;
+  }
+}
+
+.section-padding {
+  padding: 5rem 0;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding: 8rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-padding {
+    padding: 10rem 0;
+  }
+}
+
+.whitespace-heavy {
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+/* Image Filters (Modern Museum) */
+.sepia-hover {
+  filter: sepia(0.6) grayscale(0.2) contrast(0.9);
+  transition: var(--transition-museum);
+}
+
+.sepia-hover:hover {
+  filter: sepia(0) grayscale(0) contrast(1);
+}
+
+/* Cards & Borders */
+.heritage-card {
+  border-bottom: 1px solid var(--border-muted);
+  transition: var(--transition-museum);
+}
+
+.heritage-card:hover {
+  border-bottom-color: var(--primary-red);
+}
+
+/* Buttons */
+.btn-heritage {
+  position: relative;
+  padding: 1rem 2.5rem;
+  border: 1px solid var(--primary-blue);
+  color: var(--primary-blue);
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition: var(--transition-museum);
+}
+
+.btn-heritage:hover {
+  background: var(--primary-blue);
+  color: white;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-warm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-red);
+}
+
+/* Tiptap Editor Styles */
+.tiptap {
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+  font-style: italic;
+}
+
+.tiptap h2 {
+  font-size: 1.5rem;
+  font-family: var(--font-playfair), serif;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tiptap h3 {
+  font-size: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.tiptap p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tiptap li {
+  margin-bottom: 0.25rem;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 1.5rem 0;
+}
