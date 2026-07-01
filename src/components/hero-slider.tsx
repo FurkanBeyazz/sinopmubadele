@@ -47,7 +47,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
 
     return (
-        <section className="relative w-full h-[70vh] md:h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900">
+        <section className="relative w-full h-[60vh] sm:h-[70vh] md:h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900">
 
             {/* 1. ARKA PLAN SLIDER (Crossfade & Ken Burns Efekti) */}
             {activeSlides.map((slide, index) => (
@@ -60,7 +60,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                         src={slide.image}
                         alt={slide.title || "Hero Background"}
                         fill
-                        className="object-cover object-center"
+                        className="object-cover object-[50%_28%] md:object-[50%_35%]"
                         priority={index === 0}
                         quality={90}
                     />
