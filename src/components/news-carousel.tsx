@@ -60,8 +60,8 @@ export default function NewsCarousel({ items }: { items: NewsItem[] }) {
     // Kesintisiz döngü için içeriği ikiye katlıyoruz; az öğe varsa da dolgun görünür
     const base = items.length > 0 && items.length < 4 ? [...items, ...items] : items;
     const loop = [...base, ...base];
-    // Tek tam tur süresi (öğe başına ~2.8sn — belirgin akış)
-    const secondsPerLoop = Math.max(14, Math.round(base.length * 2.8));
+    // Tek tam tur süresi (öğe başına ~4sn — sakin akış)
+    const secondsPerLoop = Math.max(20, Math.round(base.length * 4));
 
     const trackRef = useRef<HTMLDivElement>(null);
     const offset = useRef(0);
