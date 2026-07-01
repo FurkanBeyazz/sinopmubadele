@@ -33,10 +33,16 @@ cd sinopmubadele
 nano .env
 ```
 
-`.env` içeriği (aşağıyı yapıştır, UploadThing anahtarlarını kendi panelinden/yerel `.env`'inden al):
+Önce güçlü bir secret üret ve çıktısını `NEXTAUTH_SECRET`'a yapıştır:
+
+```bash
+openssl rand -base64 32
+```
+
+`.env` içeriği (UploadThing anahtarlarını kendi panelinden/yerel `.env`'inden al):
 
 ```env
-NEXTAUTH_SECRET=6qG3M5jJgwnlRTLwUbfeYGAEgdinyUa3M6lertjVobM=
+NEXTAUTH_SECRET=...(yukarıdaki komutun çıktısını yapıştır)
 NEXTAUTH_URL=https://sinopmubadele.com
 NEXT_PUBLIC_SITE_URL=https://sinopmubadele.com
 
