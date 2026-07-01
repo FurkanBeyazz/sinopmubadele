@@ -3,6 +3,31 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+// --- Giriş denemesi sınırlayıcı (kaba kuvvet koruması) ---
+// 5 hatalı denemeden sonra o e-posta 15 dakika kilitlenir.
+// Bellek-içi tutulur; tek PM2 instance'ı için yeterlidir.
+const MAX_ATTEMPTS = 5;
+const LOCK_MS = 15 * 60 * 1000;
+const loginAttempts = new Map<string, { count: number; lockedUntil: number }>();
+
+function checkLock(key: string) {
+    const entry = loginAttempts.get(key);
+    if (entry && entry.lockedUntil > Date.now()) {
+        const kalanDk = Math.ceil((entry.lockedUntil - Date.now()) / 60000);
+        throw new Error(`Çok fazla hatalı deneme. ${kalanDk} dakika sonra tekrar deneyin.`);
+    }
+}
+
+function recordFail(key: string) {
+    const entry = loginAttempts.get(key) || { count: 0, lockedUntil: 0 };
+    entry.count += 1;
+    if (entry.count >= MAX_ATTEMPTS) {
+        entry.lockedUntil = Date.now() + LOCK_MS;
+        entry.count = 0;
+    }
+    loginAttempts.set(key, entry);
+}
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -16,13 +41,18 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("E-posta ve şifre gereklidir.");
                 }
 
+                const key = credentials.email.trim().toLowerCase();
+                checkLock(key);
+
                 // Find user in database
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email },
                 });
 
+                // Tek tip hata mesajı: e-postanın kayıtlı olup olmadığı sızmasın
                 if (!user) {
-                    throw new Error("Bu e-posta ile kayıtlı kullanıcı bulunamadı.");
+                    recordFail(key);
+                    throw new Error("E-posta veya şifre hatalı.");
                 }
 
                 // Compare password with bcrypt hash
@@ -32,8 +62,12 @@ export const authOptions: NextAuthOptions = {
                 );
 
                 if (!isPasswordValid) {
-                    throw new Error("Şifre hatalı. Lütfen tekrar deneyin.");
+                    recordFail(key);
+                    throw new Error("E-posta veya şifre hatalı.");
                 }
+
+                // Başarılı giriş: deneme sayacını sıfırla
+                loginAttempts.delete(key);
 
                 // Return user object (this gets encoded in the JWT)
                 return {
