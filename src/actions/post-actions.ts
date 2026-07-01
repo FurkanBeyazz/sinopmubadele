@@ -37,7 +37,7 @@ export async function createPost(data: {
             featuredImage: data.featuredImage || '',
             images: data.images ? JSON.stringify(data.images) : '[]',
             category: data.category,
-            author: data.author || 'Kenan Başkan',
+            author: data.author || 'Editör',
             published: data.published,
             date: new Date(),
         },
@@ -73,7 +73,7 @@ export async function updatePost(
             featuredImage: data.featuredImage || '',
             images: data.images ? JSON.stringify(data.images) : undefined, // Only update if provided
             category: data.category,
-            author: data.author || 'Kenan Başkan',
+            author: data.author || 'Editör',
             published: data.published,
         },
     });

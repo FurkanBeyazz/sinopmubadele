@@ -154,12 +154,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <DropdownMenuTrigger asChild>
                                 <div className="flex items-center gap-3 cursor-pointer group">
                                     <div className="text-right hidden sm:block">
-                                        <p className="text-xs font-black text-slate-900 uppercase tracking-tighter">Kenan Başkan</p>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mt-1">Süper Yetkili</p>
+                                        <p className="text-xs font-black text-slate-900 uppercase tracking-tighter">Editör</p>
                                     </div>
                                     <Avatar className="h-10 w-10 border-2 border-slate-100 group-hover:border-primary-red transition-all shadow-sm">
-                                        <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kenan" />
-                                        <AvatarFallback className="bg-slate-100 text-slate-600 font-bold">KB</AvatarFallback>
+                                        <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Editor" />
+                                        <AvatarFallback className="bg-slate-100 text-slate-600 font-bold">ED</AvatarFallback>
                                     </Avatar>
                                 </div>
                             </DropdownMenuTrigger>

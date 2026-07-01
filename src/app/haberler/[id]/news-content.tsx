@@ -67,11 +67,10 @@ export default function NewsDetailContent({ post }: { post: any }) {
                             <div className="flex items-center justify-center md:justify-start border-b border-slate-100 pb-8 gap-5">
                                 <div className="flex items-center">
                                     <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-serif font-bold text-lg mr-3 border border-slate-200">
-                                        {(post.author || "Y")[0]}
+                                        E
                                     </div>
                                     <div className="text-left">
-                                        <div className="text-sm font-bold text-slate-900">{post.author || "Yönetim"}</div>
-                                        <div className="text-xs text-slate-500">Editör</div>
+                                        <div className="text-sm font-bold text-slate-900">Editör</div>
                                     </div>
                                 </div>
                                 <div className="h-8 w-px bg-slate-200 mx-2"></div>
