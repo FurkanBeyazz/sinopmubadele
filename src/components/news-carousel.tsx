@@ -1,8 +1,10 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useAnimationFrame } from "framer-motion";
 
 export interface NewsItem {
     id: string;
@@ -58,19 +60,36 @@ export default function NewsCarousel({ items }: { items: NewsItem[] }) {
     // Kesintisiz döngü için içeriği ikiye katlıyoruz; az öğe varsa da dolgun görünür
     const base = items.length > 0 && items.length < 4 ? [...items, ...items] : items;
     const loop = [...base, ...base];
-    // Öğe sayısına göre hız (öğe başına ~2.8sn — belirgin akış)
-    const duration = Math.max(14, Math.round(base.length * 2.8));
+    // Tek tam tur süresi (öğe başına ~2.8sn — belirgin akış)
+    const secondsPerLoop = Math.max(14, Math.round(base.length * 2.8));
+
+    const trackRef = useRef<HTMLDivElement>(null);
+    const offset = useRef(0);
+    const paused = useRef(false);
+
+    // JS tabanlı marquee: her karede kaydır (reduced-motion / CSS takozlarından etkilenmez)
+    useAnimationFrame((_, delta) => {
+        const el = trackRef.current;
+        if (!el || paused.current) return;
+        const half = el.scrollWidth / 2; // içerik iki kez var; yarısı = bir set
+        if (half <= 0) return;
+        const pxPerMs = half / (secondsPerLoop * 1000);
+        offset.current -= pxPerMs * delta;
+        if (-offset.current >= half) offset.current += half; // kesintisiz döngü
+        el.style.transform = `translateX(${offset.current}px)`;
+    });
 
     return (
-        <div className="marquee-wrap relative overflow-hidden">
+        <div
+            className="relative overflow-hidden"
+            onMouseEnter={() => (paused.current = true)}
+            onMouseLeave={() => (paused.current = false)}
+        >
             {/* Kenar yumuşatma (fade) */}
             <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-stone-50 to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-stone-50 to-transparent" />
 
-            <div
-                className="marquee-track flex w-max gap-6 py-2"
-                style={{ animationDuration: `${duration}s` }}
-            >
+            <div ref={trackRef} className="flex w-max gap-6 py-2 will-change-transform">
                 {loop.map((item, i) => (
                     <NewsCard key={`${item.id}-${i}`} item={item} />
                 ))}

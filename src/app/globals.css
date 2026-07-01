@@ -242,20 +242,3 @@ h2 {
   border-top: 1px solid #e2e8f0;
   margin: 1.5rem 0;
 }
-/* ---- Haber carousel (saga-sola akan marquee) ---- */
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee-track {
-  animation-name: marquee-scroll;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform;
-}
-.marquee-wrap:hover .marquee-track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-}
