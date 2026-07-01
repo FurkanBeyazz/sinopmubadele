@@ -58,11 +58,11 @@ export default function NewsCarousel({ items }: { items: NewsItem[] }) {
     // Kesintisiz döngü için içeriği ikiye katlıyoruz; az öğe varsa da dolgun görünür
     const base = items.length > 0 && items.length < 4 ? [...items, ...items] : items;
     const loop = [...base, ...base];
-    // Öğe sayısına göre hız (öğe başına ~6sn)
-    const duration = Math.max(20, base.length * 6);
+    // Öğe sayısına göre hız (öğe başına ~4.5sn)
+    const duration = Math.max(18, Math.round(base.length * 4.5));
 
     return (
-        <div className="group/marquee relative overflow-hidden">
+        <div className="marquee-wrap relative overflow-hidden">
             {/* Kenar yumuşatma (fade) */}
             <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-stone-50 to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-stone-50 to-transparent" />
@@ -75,30 +75,6 @@ export default function NewsCarousel({ items }: { items: NewsItem[] }) {
                     <NewsCard key={`${item.id}-${i}`} item={item} />
                 ))}
             </div>
-
-            <style jsx>{`
-                @keyframes marquee-scroll {
-                    from {
-                        transform: translateX(0);
-                    }
-                    to {
-                        transform: translateX(-50%);
-                    }
-                }
-                .marquee-track {
-                    animation-name: marquee-scroll;
-                    animation-timing-function: linear;
-                    animation-iteration-count: infinite;
-                }
-                .group\\/marquee:hover .marquee-track {
-                    animation-play-state: paused;
-                }
-                @media (prefers-reduced-motion: reduce) {
-                    .marquee-track {
-                        animation: none;
-                    }
-                }
-            `}</style>
         </div>
     );
 }
