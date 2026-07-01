@@ -202,14 +202,14 @@ export default function MemoryAdminPage() {
                                                 allowedContent: "hidden",
                                             }}
                                             content={{
-                                                button({ ready, isUploading }) {
-                                                    if (isUploading) return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Yükleniyor...</>;
-                                                    if (ready) return <><Camera className="mr-2 h-5 w-5" /> Fotoğrafları Seç (Max 10)</>;
+                                                button({ ready, isUploading, uploadProgress }) {
+                                                    if (isUploading) return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Yükleniyor %{uploadProgress ?? 0}</>;
+                                                    if (ready) return <><Camera className="mr-2 h-5 w-5" /> Fotoğrafları Seç</>;
                                                     return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Hazırlanıyor...</>;
                                                 },
                                             }}
                                         />
-                                        <p className="text-xs text-slate-400 mt-2 font-medium text-center">Ctrl tuşu ile birden fazla (Max 10) fotoğraf seçebilirsiniz.</p>
+                                        <p className="text-xs text-slate-400 mt-2 font-medium text-center">Ctrl tuşu ile birden fazla fotoğraf seçebilirsiniz.</p>
                                     </div>
                                 )}
                             </div>

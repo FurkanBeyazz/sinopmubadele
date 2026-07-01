@@ -188,6 +188,17 @@ export default function NewPostPage() {
                             onUploadError={(error: Error) => {
                                 toast.error(`Yükleme hatası: ${error.message}`);
                             }}
+                            content={{
+                                button({ ready, isUploading, uploadProgress }) {
+                                    if (isUploading) return `Yükleniyor %${uploadProgress ?? 0}`;
+                                    if (ready) return "Fotoğrafları Seç";
+                                    return "Hazırlanıyor...";
+                                },
+                                allowedContent({ isUploading, uploadProgress }) {
+                                    if (isUploading) return `Yükleniyor... %${uploadProgress ?? 0}`;
+                                    return "Birden fazla fotoğraf seçebilirsiniz";
+                                },
+                            }}
                         />
                         {/* 
                            WAIT: The user provided specific code using `UploadDropzone`. 

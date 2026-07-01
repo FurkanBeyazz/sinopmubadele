@@ -16,7 +16,7 @@ async function ensureAdmin() {
 
 export const ourFileRouter = {
     // 1. TEKLİ YÜKLEME (Profil, Kapak Görseli vb.)
-    imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+    imageUploader: f({ image: { maxFileSize: "8MB", maxFileCount: 1 } })
         .middleware(async () => {
             return await ensureAdmin();
         })
@@ -26,7 +26,7 @@ export const ourFileRouter = {
         }),
 
     // 2. ÇOKLU YÜKLEME (Anı Köşesi, Galeri)
-    bulkImageUploader: f({ image: { maxFileSize: "8MB", maxFileCount: 10 } })
+    bulkImageUploader: f({ image: { maxFileSize: "8MB", maxFileCount: 100 } })
         .middleware(async () => {
             return await ensureAdmin();
         })
@@ -35,8 +35,8 @@ export const ourFileRouter = {
             return { url: file.url };
         }),
 
-    // 3. Sayfa galerileri için çoklu resim yükleyici (Maksimum 10 dosya)
-    pageImageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 10 } })
+    // 3. Sayfa galerileri için çoklu resim yükleyici
+    pageImageUploader: f({ image: { maxFileSize: "8MB", maxFileCount: 100 } })
         .middleware(async () => {
             return await ensureAdmin();
         })

@@ -39,7 +39,15 @@ export default function UploadthingImageUpload({ onUploadComplete }: Uploadthing
                         }}
                         content={{
                             label: 'Resim dosyanızı sürükleyip bırakın',
-                            allowedContent: 'PNG, JPG, WEBP · Maks 4MB',
+                            button({ ready, isUploading, uploadProgress }) {
+                                if (isUploading) return `Yükleniyor %${uploadProgress ?? 0}`;
+                                if (ready) return 'Dosya Seç';
+                                return 'Hazırlanıyor...';
+                            },
+                            allowedContent({ isUploading, uploadProgress }) {
+                                if (isUploading) return `Yükleniyor... %${uploadProgress ?? 0}`;
+                                return 'PNG, JPG, WEBP · Maks 8MB';
+                            },
                         }}
                     />
                 </div>

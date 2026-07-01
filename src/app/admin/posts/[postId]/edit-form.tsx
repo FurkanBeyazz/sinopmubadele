@@ -176,6 +176,17 @@ export default function PostEditForm({ initialData }: PostEditFormProps) {
                             onUploadError={(error: Error) => {
                                 toast.error(`Hata: ${error.message}`);
                             }}
+                            content={{
+                                button({ ready, isUploading, uploadProgress }) {
+                                    if (isUploading) return `Yükleniyor %${uploadProgress ?? 0}`;
+                                    if (ready) return "Fotoğrafları Seç";
+                                    return "Hazırlanıyor...";
+                                },
+                                allowedContent({ isUploading, uploadProgress }) {
+                                    if (isUploading) return `Yükleniyor... %${uploadProgress ?? 0}`;
+                                    return "Birden fazla fotoğraf seçebilirsiniz";
+                                },
+                            }}
                         />
 
                         {/* Önizleme Grid'i */}
