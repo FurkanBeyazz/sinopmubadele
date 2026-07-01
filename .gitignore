@@ -57,3 +57,6 @@ pnpm-debug.log*
 
 # TypeScript incremental build cache
 tsconfig.tsbuildinfo
+
+# Yerel sunucu notlari (ASLA commit etme)
+sunucu.txt
