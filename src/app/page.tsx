@@ -1,13 +1,11 @@
 
 import { prisma } from "@/lib/prisma";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Users, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 import HeroSlider from "@/components/hero-slider";
+import NewsCarousel from "@/components/news-carousel";
 import { getActiveSlides } from "@/actions/hero-actions";
 
 export const dynamic = 'force-dynamic';
@@ -18,7 +16,7 @@ async function getLatestNews() {
             where: {
                 published: true,
             },
-            take: 3,
+            take: 10,
             orderBy: {
                 createdAt: 'desc',
             },
@@ -101,53 +99,7 @@ export default async function Home() {
                     </div>
 
                     {news.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {news.map((item) => (
-                                <Card key={item.id} className="group overflow-hidden border-none shadow-sm hover:shadow-md transition-all duration-300">
-                                    <div className="relative h-48 w-full overflow-hidden bg-stone-200">
-                                        {item.featuredImage ? (
-                                            <Image
-                                                src={item.featuredImage}
-                                                alt={item.title}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full text-stone-400">
-                                                <span className="text-4xl font-serif opacity-20">SM</span>
-                                            </div>
-                                        )}
-                                        <div className="absolute top-4 left-4">
-                                            <Badge variant="secondary" className="bg-white/90 backdrop-blur text-slate-900 hover:bg-white">
-                                                {item.category}
-                                            </Badge>
-                                        </div>
-                                    </div>
-                                    <CardHeader>
-                                        <CardTitle className="font-serif text-xl leading-snug line-clamp-2 group-hover:text-red-900 transition-colors">
-                                            <Link href={`/haberler/${item.id}`}>
-                                                {item.title}
-                                            </Link>
-                                        </CardTitle>
-                                        <p className="text-xs text-slate-500 mt-2">
-                                            {new Date(item.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                        </p>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
-                                            {item.excerpt || "İçerik detayı için haberi okuyun..."}
-                                        </p>
-                                    </CardContent>
-                                    <CardFooter>
-                                        <Button variant="link" asChild className="p-0 h-auto text-red-900 font-medium text-sm group-hover:translate-x-1 transition-transform">
-                                            <Link href={`/haberler/${item.id}`} className="flex items-center gap-1">
-                                                Devamını Oku <ArrowRight className="w-3 h-3" />
-                                            </Link>
-                                        </Button>
-                                    </CardFooter>
-                                </Card>
-                            ))}
-                        </div>
+                        <NewsCarousel items={news as any} />
                     ) : (
                         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-stone-300">
                             <p className="text-slate-500 font-serif text-lg">Henüz içerik eklenmedi.</p>

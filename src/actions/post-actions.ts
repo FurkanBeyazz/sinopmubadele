@@ -44,6 +44,9 @@ export async function createPost(data: {
     });
 
     revalidatePath('/admin/posts');
+    revalidatePath('/');
+    revalidatePath('/haberler');
+    revalidatePath('/etkinlikler');
     return post;
 }
 
@@ -77,6 +80,10 @@ export async function updatePost(
 
     revalidatePath('/admin/posts');
     revalidatePath(`/admin/posts/${id}`);
+    revalidatePath('/');
+    revalidatePath('/haberler');
+    revalidatePath('/etkinlikler');
+    revalidatePath(`/haberler/${id}`);
     return post;
 }
 
@@ -87,4 +94,7 @@ export async function deletePost(id: string) {
     });
 
     revalidatePath('/admin/posts');
+    revalidatePath('/');
+    revalidatePath('/haberler');
+    revalidatePath('/etkinlikler');
 }

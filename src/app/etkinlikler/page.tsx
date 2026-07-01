@@ -9,6 +9,9 @@ export const metadata = {
     description: "Derneğimizin düzenlediği güncel ve geçmiş etkinlikler.",
 };
 
+// Yeni etkinlik eklenince anında görünsün diye her istekte taze render
+export const dynamic = "force-dynamic";
+
 export default async function EtkinliklerPage() {
     // Veritabanından Etkinlikleri Çek
     const etkinlikler = await prisma.announcement.findMany({
