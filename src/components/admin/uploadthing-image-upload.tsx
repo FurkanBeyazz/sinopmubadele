@@ -13,6 +13,7 @@ interface UploadthingImageUploadProps {
 export default function UploadthingImageUpload({ onUploadComplete }: UploadthingImageUploadProps) {
     const [uploadedUrl, setUploadedUrl] = useState<string>('');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [uploadPct, setUploadPct] = useState<number | null>(null);
 
     return (
         <div className="space-y-6">
@@ -20,7 +21,10 @@ export default function UploadthingImageUpload({ onUploadComplete }: Uploadthing
                 <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 overflow-hidden">
                     <UploadDropzone
                         endpoint="imageUploader"
+                        onUploadBegin={() => setUploadPct(0)}
+                        onUploadProgress={(p) => setUploadPct(Math.round(p))}
                         onClientUploadComplete={(res) => {
+                            setUploadPct(null);
                             if (res && res[0]) {
                                 const url = res[0].url;
                                 setUploadedUrl(url);
@@ -29,6 +33,7 @@ export default function UploadthingImageUpload({ onUploadComplete }: Uploadthing
                             }
                         }}
                         onUploadError={(error: Error) => {
+                            setUploadPct(null);
                             alert(`Yükleme hatası: ${error.message}`);
                         }}
                         appearance={{
@@ -39,17 +44,25 @@ export default function UploadthingImageUpload({ onUploadComplete }: Uploadthing
                         }}
                         content={{
                             label: 'Resim dosyanızı sürükleyip bırakın',
-                            button({ ready, isUploading, uploadProgress }) {
-                                if (isUploading) return `Yükleniyor %${uploadProgress ?? 0}`;
+                            button({ ready, isUploading }) {
+                                if (isUploading) return `Yükleniyor %${uploadPct ?? 0}`;
                                 if (ready) return 'Dosya Seç';
                                 return 'Hazırlanıyor...';
                             },
-                            allowedContent({ isUploading, uploadProgress }) {
-                                if (isUploading) return `Yükleniyor... %${uploadProgress ?? 0}`;
-                                return 'PNG, JPG, WEBP · Maks 8MB';
-                            },
+                            allowedContent: 'PNG, JPG, WEBP · Maks 100MB',
                         }}
                     />
+                    {uploadPct !== null && (
+                        <div className="px-4 pb-4">
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                                <div
+                                    className="h-full rounded-full bg-red-900 transition-all duration-200"
+                                    style={{ width: `${uploadPct}%` }}
+                                />
+                            </div>
+                            <p className="mt-1 text-center text-xs font-bold text-slate-500">Yükleniyor... %{uploadPct}</p>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <Card className="border-emerald-200 bg-emerald-50/50">

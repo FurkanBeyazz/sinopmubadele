@@ -25,9 +25,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Geçersiz dosya türü' }, { status: 400 });
         }
 
-        // Validate file size (8MB max)
-        if (file.size > 8 * 1024 * 1024) {
-            return NextResponse.json({ error: 'Dosya 8MB\'dan büyük olamaz' }, { status: 400 });
+        // Validate file size (100MB max)
+        if (file.size > 100 * 1024 * 1024) {
+            return NextResponse.json({ error: 'Dosya 100MB\'dan büyük olamaz' }, { status: 400 });
         }
 
         const bytes = await file.arrayBuffer();

@@ -58,6 +58,7 @@ interface PostEditFormProps {
 export default function PostEditForm({ initialData }: PostEditFormProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadPct, setUploadPct] = useState<number | null>(null);
 
     // Parse initial images safely
     const [images, setImages] = useState<string[]>(() => {
@@ -166,7 +167,10 @@ export default function PostEditForm({ initialData }: PostEditFormProps) {
 
                         <UploadDropzone
                             endpoint="pageImageUploader" // Çoklu yükleme yetkisi olan endpoint
+                            onUploadBegin={() => setUploadPct(0)}
+                            onUploadProgress={(p) => setUploadPct(Math.round(p))}
                             onClientUploadComplete={(res) => {
+                                setUploadPct(null);
                                 if (res) {
                                     const newUrls = res.map((f) => f.url);
                                     setImages((prev) => [...prev, ...newUrls]);
@@ -174,20 +178,29 @@ export default function PostEditForm({ initialData }: PostEditFormProps) {
                                 }
                             }}
                             onUploadError={(error: Error) => {
+                                setUploadPct(null);
                                 toast.error(`Hata: ${error.message}`);
                             }}
                             content={{
-                                button({ ready, isUploading, uploadProgress }) {
-                                    if (isUploading) return `Yükleniyor %${uploadProgress ?? 0}`;
+                                button({ ready, isUploading }) {
+                                    if (isUploading) return `Yükleniyor %${uploadPct ?? 0}`;
                                     if (ready) return "Fotoğrafları Seç";
                                     return "Hazırlanıyor...";
                                 },
-                                allowedContent({ isUploading, uploadProgress }) {
-                                    if (isUploading) return `Yükleniyor... %${uploadProgress ?? 0}`;
-                                    return "Birden fazla fotoğraf seçebilirsiniz";
-                                },
+                                allowedContent: "Birden fazla fotoğraf seçebilirsiniz",
                             }}
                         />
+                        {uploadPct !== null && (
+                            <div className="mt-3">
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                                    <div
+                                        className="h-full rounded-full bg-red-900 transition-all duration-200"
+                                        style={{ width: `${uploadPct}%` }}
+                                    />
+                                </div>
+                                <p className="mt-1 text-center text-xs font-bold text-slate-500">Yükleniyor... %{uploadPct}</p>
+                            </div>
+                        )}
 
                         {/* Önizleme Grid'i */}
                         {images.length > 0 && (
