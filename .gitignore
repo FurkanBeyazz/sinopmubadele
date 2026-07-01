@@ -60,3 +60,6 @@ tsconfig.tsbuildinfo
 
 # Yerel sunucu notlari (ASLA commit etme)
 sunucu.txt
+
+# Gecici DB transfer dosyasi
+prisma/_transfer.db
