@@ -33,7 +33,7 @@ export default function NewsDetailContent({ post }: { post: any }) {
             {/* Progress Bar */}
             <div className={cn("fixed top-0 left-0 h-1 bg-red-900 z-50 transition-all duration-300", scrolled ? "opacity-100" : "opacity-0")} style={{ width: `${Math.min(100, (typeof window !== 'undefined' ? window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100 : 0))}%` }} />
 
-            <div className="container mx-auto px-4 py-8 md:py-16 max-w-5xl">
+            <div className="container mx-auto px-4 pt-28 pb-8 md:pt-36 md:pb-16 max-w-5xl">
 
                 {/* Header Navigation */}
                 <div className="mb-12">

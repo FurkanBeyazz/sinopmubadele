@@ -24,6 +24,7 @@ export async function getMemories() {
 
 export async function createMemory(data: MemoryData) {
     try {
+        await requireAdmin();
         const memory = await prisma.memory.create({
             data: {
                 visitorName: data.visitorName,

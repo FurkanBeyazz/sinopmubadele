@@ -3,32 +3,34 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+/**
+ * Güvenli seed: sabit/zayıf şifre İÇERMEZ.
+ * Admin oluşturmak için ortam değişkenleri gerekir:
+ *   ADMIN_EMAIL=... ADMIN_PASSWORD=... npx tsx prisma/seed.ts
+ * Zaten kullanıcı varsa hiçbir şey yapmaz.
+ */
 async function main() {
     console.log('🌱 Seeding başlatılıyor...');
 
-    // Check if admin already exists
-    const existingAdmin = await prisma.user.findUnique({
-        where: { email: 'admin@sinopmubadele.org' },
-    });
-
-    if (existingAdmin) {
-        console.log('⚠️  Admin kullanıcı zaten mevcut. Seed atlandı.');
+    const userCount = await prisma.user.count();
+    if (userCount > 0) {
+        console.log('⚠️  Kullanıcı zaten mevcut. Seed atlandı.');
         return;
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash('admin123', 12);
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PASSWORD;
 
-    // Create admin user
+    if (!email || !password || password.length < 8) {
+        console.log('⚠️  ADMIN_EMAIL / ADMIN_PASSWORD (min 8 karakter) tanımlı değil. Admin oluşturulmadı.');
+        console.log('    Oluşturmak için: ADMIN_EMAIL=... ADMIN_PASSWORD=... npx tsx scripts/set-admin.ts');
+        return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
     const admin = await prisma.user.create({
-        data: {
-            email: 'admin@sinopmubadele.org',
-            password: hashedPassword,
-            name: 'Kenan Başkan',
-            role: 'ADMIN',
-        },
+        data: { email, password: hashedPassword, name: 'Yönetici', role: 'ADMIN' },
     });
-
     console.log(`✅ Admin kullanıcı oluşturuldu: ${admin.email}`);
 }
 
