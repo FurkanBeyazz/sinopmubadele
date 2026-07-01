@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import HideOnAdmin from "@/components/hide-on-admin";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SITE_URL } from "@/lib/site";
@@ -55,11 +56,15 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Navbar />
+                    <HideOnAdmin>
+                        <Navbar />
+                    </HideOnAdmin>
                     <main className="flex-grow">
                         {children}
                     </main>
-                    <Footer />
+                    <HideOnAdmin>
+                        <Footer />
+                    </HideOnAdmin>
                     <Toaster />
                 </ThemeProvider>
                 <Analytics />

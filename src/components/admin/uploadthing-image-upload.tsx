@@ -21,6 +21,7 @@ export default function UploadthingImageUpload({ onUploadComplete }: Uploadthing
                 <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 overflow-hidden">
                     <UploadDropzone
                         endpoint="imageUploader"
+                        config={{ mode: "auto" }}
                         onUploadBegin={() => setUploadPct(0)}
                         onUploadProgress={(p) => setUploadPct(Math.round(p))}
                         onClientUploadComplete={(res) => {

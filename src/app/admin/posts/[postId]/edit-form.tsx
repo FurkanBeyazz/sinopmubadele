@@ -167,6 +167,9 @@ export default function PostEditForm({ initialData }: PostEditFormProps) {
 
                         <UploadDropzone
                             endpoint="pageImageUploader" // Çoklu yükleme yetkisi olan endpoint
+                            config={{ mode: "auto" }}
+                            // @ts-ignore
+                            inputProps={{ multiple: true }}
                             onUploadBegin={() => setUploadPct(0)}
                             onUploadProgress={(p) => setUploadPct(Math.round(p))}
                             onClientUploadComplete={(res) => {
