@@ -60,7 +60,7 @@ export default function NewsDetailContent({ post }: { post: any }) {
                                 </span>
                             </div>
 
-                            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight mb-8 tracking-tight">
+                            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 leading-snug mb-8 tracking-tight [text-wrap:balance]">
                                 {post.title}
                             </h1>
 
