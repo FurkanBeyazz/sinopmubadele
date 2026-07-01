@@ -47,7 +47,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
 
     return (
-        <section className="relative w-full h-[60vh] sm:h-[70vh] md:h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900">
+        <section className="relative w-full h-[60vh] sm:h-[75vh] lg:h-screen min-h-[540px] flex items-center justify-center overflow-hidden bg-slate-900">
 
             {/* 1. ARKA PLAN SLIDER (Crossfade & Ken Burns Efekti) */}
             {activeSlides.map((slide, index) => (
@@ -60,32 +60,32 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                         src={slide.image}
                         alt={slide.title || "Hero Background"}
                         fill
-                        className="object-cover object-[50%_28%] md:object-[50%_35%]"
+                        className="object-cover object-[50%_25%] md:object-[50%_30%]"
                         priority={index === 0}
                         quality={90}
                     />
                 </div>
             ))}
 
-            {/* 2. ZARİF KARARTMA (Sadece ortayı hafif karartır, fotolar görünür) */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-black/50 to-black/40"></div>
+            {/* 2. ZARİF KARARTMA (Sadece sol-alt köşe koyu; fotoğrafın geri kalanı net) */}
+            <div className="absolute inset-0 z-10 bg-gradient-to-tr from-black/85 via-black/30 to-transparent"></div>
 
-            {/* 3. KOMPAKT ÖN YÜZ İÇERİĞİ */}
-            <div className="relative z-20 container mx-auto px-4 flex flex-col items-center text-center py-10 h-full justify-center">
+            {/* 3. SOL-ALT ÖN YÜZ İÇERİĞİ */}
+            <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-10 flex flex-col items-start text-left h-full justify-end pb-16 md:pb-24">
 
-                <span className="text-xs md:text-sm font-bold tracking-[0.3em] text-white/90 uppercase mb-6 animate-fade-in-up">
+                <span className="text-[10px] md:text-sm font-bold tracking-[0.3em] text-white/90 uppercase mb-3 md:mb-4 animate-fade-in-up">
                     HOŞ GELDİNİZ
                 </span>
 
-                {/* Daha küçük ve zarif başlık animasyonu */}
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white tracking-tight flex flex-col items-center justify-center min-h-[1.4em] mb-6 drop-shadow-lg">
+                {/* Sol hizalı, belirgin başlık animasyonu */}
+                <h1 className="text-[clamp(2rem,7vw,6.5rem)] leading-[1.05] whitespace-nowrap font-serif font-bold text-white tracking-tight flex flex-col items-start justify-end min-h-[1.1em] mb-3 md:mb-5 drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
                     {mounted ? (
                         <AnimatePresence mode="wait">
                             <motion.span
                                 key={currentSlide} // KEY BURASI ÇOK ÖNEMLİ! Slayt değiştikçe animasyon tetiklenir
-                                initial={{ y: 20, opacity: 0, filter: "blur(8px)" }}
-                                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                                exit={{ y: -20, opacity: 0, filter: "blur(8px)" }}
+                                initial={{ x: -40, opacity: 0, filter: "blur(8px)" }}
+                                animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                                exit={{ x: 40, opacity: 0, filter: "blur(8px)" }}
                                 transition={{ duration: 0.6, ease: "easeOut" }}
                                 className="text-white inline-block"
                             >
@@ -98,18 +98,18 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                     )}
                 </h1>
 
-                <p className="text-base md:text-xl text-white/95 max-w-3xl font-light leading-relaxed mb-10 text-shadow-md drop-shadow-md">
+                <p className="text-xs sm:text-sm md:text-xl text-white/95 max-w-xs sm:max-w-xl font-light leading-relaxed mb-5 md:mb-8 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
                     {activeSlides[currentSlide].subtitle || "Geçmişin izlerini geleceğe taşıyan, Sinop ve Balkan kültürünün buluşma noktası."}
                 </p>
 
                 {/* Butonlar */}
-                <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-lg animate-fade-in-up delay-200">
-                    <Button asChild size="lg" className="bg-red-900 hover:bg-red-800 text-white rounded-full px-8 py-6 w-full md:w-auto shadow-lg hover:shadow-red-900/30 transition-all">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 md:gap-4 w-full max-w-md animate-fade-in-up delay-200">
+                    <Button asChild size="lg" className="bg-red-900 hover:bg-red-800 text-white rounded-full text-sm md:text-base px-6 py-4 md:px-8 md:py-6 w-full md:w-auto shadow-lg hover:shadow-red-900/30 transition-all">
                         <Link href="/tarihce">Hikayemizi Keşfet</Link>
                     </Button>
                     <Link
                         href="/kultur-evi"
-                        className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-bold text-white tracking-wide rounded-full bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white hover:text-slate-900 transition-all duration-300 shadow-lg hover:shadow-xl w-full md:w-auto"
+                        className="group inline-flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 text-xs md:text-sm font-bold text-white tracking-wide rounded-full bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white hover:text-slate-900 transition-all duration-300 shadow-lg hover:shadow-xl w-full md:w-auto"
                     >
                         <Landmark className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         <span>KÜLTÜR EVİ</span>
@@ -128,7 +128,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                     </button>
 
                     {/* 5. NOKTALAR (Dots) */}
-                    <div className="absolute bottom-10 z-30 flex gap-3">
+                    <div className="absolute bottom-8 right-4 md:right-10 z-30 flex gap-3">
                         {activeSlides.map((_, idx) => (
                             <button
                                 key={idx}
