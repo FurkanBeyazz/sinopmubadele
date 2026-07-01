@@ -58,8 +58,8 @@ export default function NewsCarousel({ items }: { items: NewsItem[] }) {
     // Kesintisiz döngü için içeriği ikiye katlıyoruz; az öğe varsa da dolgun görünür
     const base = items.length > 0 && items.length < 4 ? [...items, ...items] : items;
     const loop = [...base, ...base];
-    // Öğe sayısına göre hız (öğe başına ~4.5sn)
-    const duration = Math.max(18, Math.round(base.length * 4.5));
+    // Öğe sayısına göre hız (öğe başına ~2.8sn — belirgin akış)
+    const duration = Math.max(14, Math.round(base.length * 2.8));
 
     return (
         <div className="marquee-wrap relative overflow-hidden">
