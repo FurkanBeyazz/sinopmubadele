@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, ChevronRight, FileText, Heart, Users, ShieldCheck, FileInput } from "lucide-react";
 
 // ⚠️ DÜZENLEYİN: Derneğin gerçek sosyal medya adreslerini buraya yazın.
@@ -22,7 +23,14 @@ export default function Footer() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
                     {/* Kolon 1: Kurumsal */}
                     <div className="space-y-4">
-                        <Link href="/" className="inline-block">
+                        <Link href="/" className="flex items-center gap-3">
+                            <Image
+                                src="/logo/logo.png"
+                                alt="Sinop Mübadele ve Balkan Halkları Derneği Logosu"
+                                width={52}
+                                height={52}
+                                className="shrink-0 object-contain"
+                            />
                             <span className="font-serif font-bold text-2xl text-slate-900">
                                 Sinop Mübadele
                             </span>

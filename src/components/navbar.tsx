@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, Heart } from "lucide-react"; // Heart eklendi
 import { cn } from "@/lib/utils";
@@ -68,7 +69,17 @@ export default function Navbar() {
             <div className="container mx-auto px-4 flex items-center justify-between">
 
                 {/* LOGO */}
-                <Link href="/" className="flex items-center gap-2 group">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="relative h-11 w-11 md:h-14 md:w-14 shrink-0 rounded-full bg-white/95 p-0.5 shadow-sm transition-transform duration-300 group-hover:scale-105">
+                        <Image
+                            src="/logo/logo.png"
+                            alt="Sinop Mübadele ve Balkan Halkları Derneği Logosu"
+                            fill
+                            sizes="56px"
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
                     <div className={cn(
                         "font-serif font-bold transition-colors duration-300 flex flex-col leading-tight",
                         logoTextColor
