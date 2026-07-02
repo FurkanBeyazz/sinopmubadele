@@ -134,7 +134,9 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="font-bold text-slate-900 mb-1 font-serif">Telefon</p>
-                                        <p className="text-sm text-slate-600 font-light">+90 (368) 123 45 67</p>
+                                        <a href="tel:+905333431601" className="text-sm text-slate-600 font-light hover:text-red-900 transition-colors">
+                                            0533 343 16 01
+                                        </a>
                                     </div>
                                 </CardContent>
                             </Card>
