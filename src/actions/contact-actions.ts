@@ -8,11 +8,13 @@ import { requireAdmin } from "@/lib/auth-guard";
 
 const contactSchema = z.object({
     name: z.string().min(2, "Ad Soyad en az 2 karakter olmalıdır").max(120),
-    email: z.string().email("Geçerli bir e-posta adresi giriniz").max(160),
+    // E-posta artık opsiyonel (formdan kaldırıldı); gelirse geçerli olmalı.
+    email: z.string().email("Geçerli bir e-posta adresi giriniz").max(160).optional().or(z.literal("")),
     phone: z.string()
-        .min(7, "Geçerli bir telefon numarası giriniz")
         .max(20, "Telefon numarası çok uzun")
-        .regex(/^[0-9+()\s-]+$/, "Telefon yalnızca rakam ve + ( ) - içerebilir"),
+        .regex(/^[0-9+()\s-]+$/, "Telefon yalnızca rakam ve + ( ) - içerebilir")
+        // En az 10 rakam (Türkiye cep/sabit) — zorunlu
+        .refine((v) => (v.match(/\d/g) || []).length >= 10, "Geçerli bir telefon numarası giriniz (en az 10 hane)"),
     subject: z.string().min(3, "Konu en az 3 karakter olmalıdır").max(200),
     message: z.string().min(10, "Mesaj en az 10 karakter olmalıdır").max(5000),
 });
@@ -37,15 +39,31 @@ function isRateLimited(ip: string): boolean {
     return false;
 }
 
+// Link-spam sezgisi: mesaj/konu içinde 2+ bağlantı => büyük olasılıkla bot.
+function looksLikeSpam(text: string): boolean {
+    const links = text.match(/https?:\/\/|www\.|\[url|<a\s/gi) || [];
+    return links.length >= 2;
+}
+
 // honeypot: gizli alan; botlar doldurur, gerçek kullanıcı boş bırakır.
-export async function submitMessage(data: ContactFormData, honeypot?: string) {
+export async function submitMessage(data: ContactFormData, honeypot?: string, elapsedMs?: number) {
     try {
         // 1) Honeypot dolu => bot. Sessizce "başarılı" dön (kaydetme).
         if (honeypot && honeypot.trim() !== "") {
             return { success: true };
         }
 
-        // 2) Hız sınırı (IP bazlı)
+        // 2) Çok hızlı gönderim (form <2.5sn'de dolduruldu) => bot. Sessizce yut.
+        if (typeof elapsedMs === "number" && elapsedMs >= 0 && elapsedMs < 2500) {
+            return { success: true };
+        }
+
+        // 3) Link-spam sezgisi => sessizce yut (botu uyarmadan).
+        if (looksLikeSpam(`${data?.message || ""} ${data?.subject || ""}`)) {
+            return { success: true };
+        }
+
+        // 4) Hız sınırı (IP bazlı)
         const ip =
             headers().get("x-forwarded-for")?.split(",")[0]?.trim() ||
             headers().get("x-real-ip") ||
@@ -59,7 +77,7 @@ export async function submitMessage(data: ContactFormData, honeypot?: string) {
         const message = await prisma.contactMessage.create({
             data: {
                 name: validatedData.name,
-                email: validatedData.email,
+                email: validatedData.email || "",
                 phone: validatedData.phone,
                 subject: validatedData.subject,
                 message: validatedData.message,

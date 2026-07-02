@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MapPin, Phone, Mail, Send } from "lucide-react";
+import { MapPin, Phone, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,15 +18,16 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { submitMessage, ContactFormData } from "@/actions/contact-actions";
+import { submitMessage } from "@/actions/contact-actions";
 import Reveal from "@/components/reveal";
+
+type ContactFormValues = z.infer<typeof contactSchema>;
 
 const contactSchema = z.object({
     name: z.string().min(2, "Ad Soyad en az 2 karakter olmalıdır"),
-    email: z.string().email("Geçerli bir e-posta adresi giriniz"),
     phone: z.string()
-        .min(7, "Geçerli bir telefon numarası giriniz")
-        .regex(/^[0-9+()\s-]+$/, "Telefon yalnızca rakam ve + ( ) - içerebilir"),
+        .regex(/^[0-9+()\s-]+$/, "Telefon yalnızca rakam ve + ( ) - içerebilir")
+        .refine((v) => (v.match(/\d/g) || []).length >= 10, "Geçerli bir telefon numarası giriniz (en az 10 hane)"),
     subject: z.string().min(3, "Konu en az 3 karakter olmalıdır"),
     message: z.string().min(10, "Mesaj en az 10 karakter olmalıdır"),
 });
@@ -37,19 +38,19 @@ const COOLDOWN_MS = 90 * 1000;
 export default function ContactPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [honeypot, setHoneypot] = useState(""); // bot tuzağı (gizli)
+    const formLoadedAt = useRef<number>(Date.now()); // form açılış anı (bot süre tuzağı)
 
-    const form = useForm<ContactFormData>({
+    const form = useForm<ContactFormValues>({
         resolver: zodResolver(contactSchema),
         defaultValues: {
             name: "",
-            email: "",
             phone: "",
             subject: "",
             message: "",
         },
     });
 
-    async function onSubmit(data: ContactFormData) {
+    async function onSubmit(data: ContactFormValues) {
         // Kullanıcı tarafı bekleme: kısa sürede tekrar göndermeyi engelle
         const last = Number(localStorage.getItem("lastContactSubmit") || 0);
         const remaining = COOLDOWN_MS - (Date.now() - last);
@@ -60,7 +61,8 @@ export default function ContactPage() {
 
         setIsSubmitting(true);
         try {
-            const result = await submitMessage(data, honeypot);
+            const elapsedMs = Date.now() - formLoadedAt.current;
+            const result = await submitMessage(data, honeypot, elapsedMs);
             if (result.success) {
                 localStorage.setItem("lastContactSubmit", String(Date.now()));
                 toast.success("Mesajınız iletildi. En kısa sürede size döneceğiz.");
@@ -141,17 +143,6 @@ export default function ContactPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl group md:col-span-2">
-                                <CardContent className="p-6 flex items-start space-x-4">
-                                    <div className="p-3 bg-red-900/10 rounded-full group-hover:bg-red-900 transition-colors duration-300">
-                                        <Mail className="h-6 w-6 text-red-900 group-hover:text-white transition-colors duration-300" />
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-slate-900 mb-1 font-serif">E-posta</p>
-                                        <p className="text-sm text-slate-600 font-light">info@sinopmubadele.org.tr</p>
-                                    </div>
-                                </CardContent>
-                            </Card>
                         </div>
 
                         {/* Map */}
@@ -200,25 +191,12 @@ export default function ContactPage() {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-slate-700 font-semibold tracking-wide uppercase text-[10px]">E-posta</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="E-posta adresiniz" type="email" {...field} className="rounded-px border-slate-200 focus:border-red-900 transition-colors py-6" />
-                                            </FormControl>
-                                            <FormMessage className="text-xs text-red-900" />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
                                     name="phone"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="text-slate-700 font-semibold tracking-wide uppercase text-[10px]">Telefon</FormLabel>
+                                            <FormLabel className="text-slate-700 font-semibold tracking-wide uppercase text-[10px]">Telefon <span className="text-red-900">*</span></FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Telefon numaranız" type="tel" {...field} className="rounded-px border-slate-200 focus:border-red-900 transition-colors py-6" />
+                                                <Input placeholder="05XX XXX XX XX" type="tel" {...field} className="rounded-px border-slate-200 focus:border-red-900 transition-colors py-6" />
                                             </FormControl>
                                             <FormMessage className="text-xs text-red-900" />
                                         </FormItem>
