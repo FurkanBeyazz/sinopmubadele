@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { submitMessage } from "@/actions/contact-actions";
 import Reveal from "@/components/reveal";
+import SinopWeather from "@/components/sinop-weather";
 
 type ContactFormValues = z.infer<typeof contactSchema>;
 
@@ -112,8 +113,9 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                     {/* Left Column - Information & Map */}
                     <Reveal delay={0.1} className="space-y-12">
-                        <div className="space-y-6">
+                        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                             <h2 className="font-serif text-3xl font-bold text-slate-900">İletişim Bilgilerimiz</h2>
+                            <SinopWeather />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
