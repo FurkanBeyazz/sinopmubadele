@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import HeroSlider from "@/components/hero-slider";
 import NewsCarousel from "@/components/news-carousel";
+import Reveal from "@/components/reveal";
 import { getActiveSlides } from "@/actions/hero-actions";
 
 export const dynamic = 'force-dynamic';
@@ -40,45 +41,42 @@ export default async function Home() {
             {/* Mission Section */}
             <section className="py-20 md:py-32 bg-[#fdfbf7]">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-16 space-y-4">
-                        <span className="text-red-900 font-medium tracking-wider text-sm uppercase">Değerlerimiz</span>
-                        <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-900">Kültürümüzü Yaşatıyoruz</h2>
-                        <div className="w-24 h-1 bg-red-900 mx-auto rounded-full" />
-                    </div>
+                    <Reveal>
+                        <div className="text-center mb-16 space-y-4">
+                            <span className="text-red-900 font-medium tracking-wider text-sm uppercase">Değerlerimiz</span>
+                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-900">Kültürümüzü Yaşatıyoruz</h2>
+                            <div className="w-24 h-1 bg-red-900 mx-auto rounded-full" />
+                        </div>
+                    </Reveal>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Card 1 */}
-                        <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow group flex flex-col items-center text-center space-y-4">
-                            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                                <BookOpen className="w-8 h-8 text-red-900" />
-                            </div>
-                            <h3 className="font-serif text-xl font-bold text-slate-900">Kültürel Miras</h3>
-                            <p className="text-slate-600 leading-relaxed">
-                                Atalarımızdan kalan sözlü tarih, gelenekler ve yaşam kültürünü kayıt altına alıyor, gelecek nesillere aktarıyoruz.
-                            </p>
-                        </div>
-
-                        {/* Card 2 */}
-                        <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow group flex flex-col items-center text-center space-y-4">
-                            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                                <Users className="w-8 h-8 text-red-900" />
-                            </div>
-                            <h3 className="font-serif text-xl font-bold text-slate-900">Dayanışma</h3>
-                            <p className="text-slate-600 leading-relaxed">
-                                Mübadil torunları arasındaki bağları güçlendiriyor, sosyal yardımlaşma ve dayanışma ağımızı büyütüyoruz.
-                            </p>
-                        </div>
-
-                        {/* Card 3 */}
-                        <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow group flex flex-col items-center text-center space-y-4">
-                            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                                <History className="w-8 h-8 text-red-900" />
-                            </div>
-                            <h3 className="font-serif text-xl font-bold text-slate-900">Tarih Bilinci</h3>
-                            <p className="text-slate-600 leading-relaxed">
-                                Mübadele tarihini akademik çalışmalar ve etkinliklerle aydınlatıyor, toplumsal hafızamızı canlı tutuyoruz.
-                            </p>
-                        </div>
+                        {[
+                            {
+                                Icon: BookOpen,
+                                title: "Kültürel Miras",
+                                text: "Atalarımızdan kalan sözlü tarih, gelenekler ve yaşam kültürünü kayıt altına alıyor, gelecek nesillere aktarıyoruz.",
+                            },
+                            {
+                                Icon: Users,
+                                title: "Dayanışma",
+                                text: "Mübadil torunları arasındaki bağları güçlendiriyor, sosyal yardımlaşma ve dayanışma ağımızı büyütüyoruz.",
+                            },
+                            {
+                                Icon: History,
+                                title: "Tarih Bilinci",
+                                text: "Mübadele tarihini akademik çalışmalar ve etkinliklerle aydınlatıyor, toplumsal hafızamızı canlı tutuyoruz.",
+                            },
+                        ].map(({ Icon, title, text }, i) => (
+                            <Reveal key={title} delay={0.12 * i} className="h-full">
+                                <div className="h-full bg-white p-8 rounded-xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-2 hover:border-red-100 transition-all duration-300 group flex flex-col items-center text-center space-y-4">
+                                    <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center group-hover:bg-red-900 group-hover:scale-110 transition-all duration-300">
+                                        <Icon className="w-8 h-8 text-red-900 group-hover:text-white transition-colors duration-300" />
+                                    </div>
+                                    <h3 className="font-serif text-xl font-bold text-slate-900 group-hover:text-red-900 transition-colors">{title}</h3>
+                                    <p className="text-slate-600 leading-relaxed">{text}</p>
+                                </div>
+                            </Reveal>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -86,20 +84,24 @@ export default async function Home() {
             {/* Latest News Section */}
             <section className="py-20 bg-stone-50 border-t border-stone-200">
                 <div className="container mx-auto px-4">
-                    <div className="flex items-end justify-between mb-12">
-                        <div className="space-y-2">
-                            <span className="text-red-900 font-medium tracking-wider text-sm uppercase">Kurumsal Gelişmeler</span>
-                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-900">Haberler & Duyurular</h2>
+                    <Reveal>
+                        <div className="flex items-end justify-between mb-12">
+                            <div className="space-y-2">
+                                <span className="text-red-900 font-medium tracking-wider text-sm uppercase">Kurumsal Gelişmeler</span>
+                                <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-900">Haberler & Duyurular</h2>
+                            </div>
+                            <Button variant="link" asChild className="hidden md:inline-flex text-red-900 p-0 font-medium hover:text-red-800">
+                                <Link href="/haberler" className="flex items-center gap-2">
+                                    Tümünü Gör <ArrowRight className="w-4 h-4" />
+                                </Link>
+                            </Button>
                         </div>
-                        <Button variant="link" asChild className="hidden md:inline-flex text-red-900 p-0 font-medium hover:text-red-800">
-                            <Link href="/haberler" className="flex items-center gap-2">
-                                Tümünü Gör <ArrowRight className="w-4 h-4" />
-                            </Link>
-                        </Button>
-                    </div>
+                    </Reveal>
 
                     {news.length > 0 ? (
-                        <NewsCarousel items={news as any} />
+                        <Reveal delay={0.15}>
+                            <NewsCarousel items={news as any} />
+                        </Reveal>
                     ) : (
                         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-stone-300">
                             <p className="text-slate-500 font-serif text-lg">Henüz içerik eklenmedi.</p>

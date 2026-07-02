@@ -1,12 +1,10 @@
 import { getMembers } from "@/actions/member-actions";
-import { getPageBySlug } from "@/actions/page-actions";
 import OrgChart from "./_components/org-chart";
 
 export const dynamic = "force-dynamic";
 
 export default async function ManagementPage() {
     const members = await getMembers();
-    const pageData = await getPageBySlug("yonetim-kurulu");
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] relative overflow-hidden">
@@ -19,8 +17,8 @@ export default async function ManagementPage() {
                     <span className="text-xs font-bold tracking-[0.2em] text-slate-400 uppercase mb-4 block">
                         Kurumsal Bilgi
                     </span>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#1A202C] mb-6 tracking-tight capitalize">
-                        {pageData?.title?.replace(/-/g, " ") || "Yönetim Kurulu"}
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#1A202C] mb-6 tracking-tight">
+                        Yönetim Kurulu
                     </h1>
 
                     {/* Klasik/Zarif Ayraç (Ornamental Divider) */}
@@ -30,28 +28,6 @@ export default async function ManagementPage() {
                         <div className="h-[1px] w-12 bg-slate-300"></div>
                     </div>
                 </header>
-
-                {/* Yüzen İçerik Kanvası (Prose Content) */}
-                <div className="bg-white rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12 mb-16 relative max-w-4xl mx-auto">
-                    {/* Zarif Üst Kenarlık Efekti */}
-                    <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-
-                    <div className="prose prose-lg prose-slate max-w-none 
-                        prose-headings:font-serif prose-headings:text-[#1A202C] prose-headings:font-semibold prose-headings:tracking-tight
-                        prose-p:text-slate-600 prose-p:leading-[1.8] prose-p:tracking-wide
-                        prose-a:text-primary prose-a:underline-offset-4 hover:prose-a:text-primary/80
-                        prose-strong:text-[#1A202C] prose-strong:font-bold
-                        prose-ul:list-none prose-ul:pl-0
-                        prose-li:relative prose-li:pl-6 prose-li:text-slate-700 prose-li:mb-3
-                        before:prose-li:absolute before:prose-li:left-0 before:prose-li:top-[0.6em] before:prose-li:w-1.5 before:prose-li:h-1.5 before:prose-li:bg-primary/60 before:prose-li:rotate-45
-                        prose-img:rounded-2xl prose-img:shadow-lg prose-img:mx-auto">
-                        {pageData?.content ? (
-                            <div dangerouslySetInnerHTML={{ __html: pageData.content }} />
-                        ) : (
-                            <p className="text-center text-slate-500">Derneğimizin vizyonu ve misyonu doğrultusunda çalışmalarımızı yürüten yönetim kurulu üyelerimiz.</p>
-                        )}
-                    </div>
-                </div>
 
                 {/* Yönetim Şeması (Org Chart) */}
                 <div className="mb-4 text-center">

@@ -3,6 +3,8 @@ import { slugify } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Metadata } from "next";
+import { Users } from "lucide-react";
+import Reveal from "@/components/reveal";
 
 interface PageProps {
     params: {
@@ -47,6 +49,12 @@ export default async function DynamicPage({ params }: PageProps) {
     if (!page) {
         notFound();
     }
+
+    // Tarihçe sayfasında kurucu yönetim kurulu ayrı, vurgulu bir kutuda gösterilir
+    const isTarihce = page.slug === "tarihce";
+    const kurucuPage = isTarihce ? await getPageBySlug("yonetim-kurulu") : null;
+    // İçeriğin kendi <h3> başlığını soy; kutunun kendi başlığı var
+    const kurucuContent = kurucuPage?.content?.replace(/^\s*<h3>.*?<\/h3>/, "") || "";
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] relative overflow-hidden">
@@ -100,6 +108,49 @@ export default async function DynamicPage({ params }: PageProps) {
                         dangerouslySetInnerHTML={{ __html: page.content || "" }}
                     />
                 </div>
+
+                {/* Kurucu Yönetim Kurulu — vurgulu özel kutu (sadece Tarihçe) */}
+                {isTarihce && kurucuContent && (
+                    <Reveal className="mt-14">
+                        <section className="relative rounded-2xl p-[2px] bg-gradient-to-br from-red-900 via-red-900/30 to-transparent shadow-[0_25px_70px_-20px_rgba(127,29,29,0.35)]">
+                            <div className="relative rounded-2xl bg-white p-8 md:p-12 overflow-hidden">
+                                {/* Köşe süsü */}
+                                <div className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-red-900/5 blur-2xl" />
+                                <div className="pointer-events-none absolute top-6 right-8 font-serif text-[120px] leading-none text-red-900/[0.06] select-none">
+                                    2014
+                                </div>
+
+                                {/* Başlık */}
+                                <div className="relative flex flex-col items-center text-center mb-8">
+                                    <div className="w-14 h-14 rounded-full bg-red-900 text-white flex items-center justify-center shadow-lg shadow-red-900/30 mb-4">
+                                        <Users className="w-7 h-7" />
+                                    </div>
+                                    <span className="text-[11px] font-bold tracking-[0.25em] text-red-900/70 uppercase mb-2">
+                                        Kuruluşumuzdan
+                                    </span>
+                                    <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#1A202C] tracking-tight">
+                                        Kurucu Yönetim Kurulu
+                                    </h2>
+                                    <div className="mt-4 flex items-center gap-3 opacity-80">
+                                        <div className="h-[1px] w-10 bg-stone-300" />
+                                        <div className="w-1.5 h-1.5 rotate-45 bg-red-900" />
+                                        <div className="h-[1px] w-10 bg-stone-300" />
+                                    </div>
+                                </div>
+
+                                {/* İçerik */}
+                                <div
+                                    className="relative prose prose-lg prose-slate max-w-2xl mx-auto
+                                    prose-p:text-slate-600 prose-p:leading-[1.8] prose-p:text-center
+                                    prose-strong:text-red-900 prose-strong:font-bold
+                                    prose-ul:list-none prose-ul:pl-0 prose-ul:grid prose-ul:gap-2 sm:prose-ul:grid-cols-2
+                                    prose-li:m-0 prose-li:rounded-xl prose-li:border prose-li:border-stone-100 prose-li:bg-[#fdfbf7] prose-li:px-5 prose-li:py-3 prose-li:text-slate-700"
+                                    dangerouslySetInnerHTML={{ __html: kurucuContent }}
+                                />
+                            </div>
+                        </section>
+                    </Reveal>
+                )}
             </div>
         </div>
     );

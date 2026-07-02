@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { submitMessage, ContactFormData } from "@/actions/contact-actions";
+import Reveal from "@/components/reveal";
 
 const contactSchema = z.object({
     name: z.string().min(2, "Ad Soyad en az 2 karakter olmalıdır"),
@@ -75,31 +76,49 @@ export default function ContactPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#fdfbf7]">
-            {/* Header */}
-            <div className="bg-slate-900 py-16 md:py-24 text-white text-center">
-                <div className="container mx-auto px-4">
-                    <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 italic">Bizimle İletişime Geçin</h1>
-                    <div className="w-24 h-1 bg-red-900 mx-auto rounded-full" />
-                </div>
-            </div>
+        <div className="min-h-screen bg-[#fdfbf7] relative overflow-hidden">
+            {/* Zarif arka plan parlaması */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-red-900/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="container mx-auto px-4 py-16 md:py-24">
+            {/* Editoryal Başlık */}
+            <header className="container mx-auto px-4 pt-32 pb-14 md:pt-40 md:pb-20 text-center relative">
+                <Reveal>
+                    <span className="text-xs font-bold tracking-[0.25em] text-red-900/70 uppercase mb-4 block">
+                        Size Bir Mesaj Uzaklıktayız
+                    </span>
+                </Reveal>
+                <Reveal delay={0.1}>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#1A202C] mb-6 tracking-tight">
+                        İletişim
+                    </h1>
+                </Reveal>
+                <Reveal delay={0.2}>
+                    <div className="flex items-center justify-center gap-4 opacity-80 mb-6">
+                        <div className="h-[1px] w-12 bg-stone-300" />
+                        <div className="w-2 h-2 rotate-45 bg-red-900" />
+                        <div className="h-[1px] w-12 bg-stone-300" />
+                    </div>
+                </Reveal>
+                <Reveal delay={0.3}>
+                    <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
+                        Derneğimizle ilgili her türlü soru, öneri ve görüşleriniz için bize ulaşabilirsiniz.
+                    </p>
+                </Reveal>
+            </header>
+
+            <div className="container mx-auto px-4 pb-24 relative">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                     {/* Left Column - Information & Map */}
-                    <div className="space-y-12">
+                    <Reveal delay={0.1} className="space-y-12">
                         <div className="space-y-6">
                             <h2 className="font-serif text-3xl font-bold text-slate-900">İletişim Bilgilerimiz</h2>
-                            <p className="text-slate-600 font-light text-lg leading-relaxed">
-                                Derneğimizle ilgili her türlü soru, öneri ve görüşleriniz için aşağıdaki kanallardan bize ulaşabilirsiniz.
-                            </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl group">
                                 <CardContent className="p-6 flex items-start space-x-4">
-                                    <div className="p-3 bg-red-900/10 rounded-px">
-                                        <MapPin className="h-6 w-6 text-red-900" />
+                                    <div className="p-3 bg-red-900/10 rounded-full group-hover:bg-red-900 transition-colors duration-300">
+                                        <MapPin className="h-6 w-6 text-red-900 group-hover:text-white transition-colors duration-300" />
                                     </div>
                                     <div>
                                         <p className="font-bold text-slate-900 mb-1 font-serif">Adres</p>
@@ -108,10 +127,10 @@ export default function ContactPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl group">
                                 <CardContent className="p-6 flex items-start space-x-4">
-                                    <div className="p-3 bg-red-900/10 rounded-px">
-                                        <Phone className="h-6 w-6 text-red-900" />
+                                    <div className="p-3 bg-red-900/10 rounded-full group-hover:bg-red-900 transition-colors duration-300">
+                                        <Phone className="h-6 w-6 text-red-900 group-hover:text-white transition-colors duration-300" />
                                     </div>
                                     <div>
                                         <p className="font-bold text-slate-900 mb-1 font-serif">Telefon</p>
@@ -120,10 +139,10 @@ export default function ContactPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow md:col-span-2">
+                            <Card className="border-slate-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl group md:col-span-2">
                                 <CardContent className="p-6 flex items-start space-x-4">
-                                    <div className="p-3 bg-red-900/10 rounded-px">
-                                        <Mail className="h-6 w-6 text-red-900" />
+                                    <div className="p-3 bg-red-900/10 rounded-full group-hover:bg-red-900 transition-colors duration-300">
+                                        <Mail className="h-6 w-6 text-red-900 group-hover:text-white transition-colors duration-300" />
                                     </div>
                                     <div>
                                         <p className="font-bold text-slate-900 mb-1 font-serif">E-posta</p>
@@ -134,7 +153,7 @@ export default function ContactPage() {
                         </div>
 
                         {/* Map */}
-                        <div className="relative w-full h-[400px] rounded-px overflow-hidden border border-slate-200 grayscale shadow-xl">
+                        <div className="relative w-full h-[400px] rounded-2xl overflow-hidden border border-slate-200 grayscale hover:grayscale-0 transition-all duration-700 shadow-xl">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2979.673857846543!2d35.1508!3d42.0266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40887c4731111111%3A0x1111111111111111!2sKefevi%2C%20Kuru%C3%A7e%C5%9Fme%20Sk.%20No%3A23%2F1%2C%2057000%20Sinop%20Merkez%2FSinop!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str"
                                 width="100%"
@@ -145,10 +164,11 @@ export default function ContactPage() {
                                 referrerPolicy="no-referrer-when-downgrade"
                             ></iframe>
                         </div>
-                    </div>
+                    </Reveal>
 
                     {/* Right Column - Form */}
-                    <div className="bg-white p-8 md:p-12 border border-slate-100 shadow-2xl rounded-px">
+                    <Reveal delay={0.2} className="bg-white p-8 md:p-12 border border-slate-100 shadow-2xl rounded-2xl relative overflow-hidden">
+                        <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-red-900/30 to-transparent" />
                         <h3 className="font-serif text-2xl font-bold text-slate-900 mb-8">Bize Mesaj Gönderin</h3>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -241,7 +261,7 @@ export default function ContactPage() {
                                 </Button>
                             </form>
                         </Form>
-                    </div>
+                    </Reveal>
                 </div>
             </div>
         </div>
