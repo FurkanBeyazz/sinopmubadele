@@ -10,7 +10,8 @@ interface GalleryDetailPageProps {
 }
 
 export async function generateMetadata({ params }: GalleryDetailPageProps): Promise<Metadata> {
-    const gallery = await getGalleryBySlug(params.slug);
+    // URL'deki Türkçe karakterler kodlanmış gelir (%C3%BC vb.) — çözerek ara
+    const gallery = await getGalleryBySlug(decodeURIComponent(params.slug));
     if (!gallery) return { title: "Albüm Bulunamadı" };
 
     return {
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: GalleryDetailPageProps): Prom
 }
 
 export default async function GalleryDetailPage({ params }: GalleryDetailPageProps) {
-    const gallery = await getGalleryBySlug(params.slug);
+    const gallery = await getGalleryBySlug(decodeURIComponent(params.slug));
 
     if (!gallery) {
         notFound();
