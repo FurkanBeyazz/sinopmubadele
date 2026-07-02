@@ -52,8 +52,9 @@ export default function RootLayout({
             <body className={`${inter.variable} ${playfair.variable} font-sans bg-[#fdfbf7] antialiased flex flex-col min-h-screen`}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme="light"
+                    enableSystem={false}
+                    forcedTheme="light"
                     disableTransitionOnChange
                 >
                     <HideOnAdmin>
