@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen, Users, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import HeroSlider from "@/components/hero-slider";
-import NewsCarousel from "@/components/news-carousel";
+import NewsShowcase from "@/components/news-showcase";
 import Reveal from "@/components/reveal";
 import { getActiveSlides } from "@/actions/hero-actions";
 
@@ -100,7 +100,7 @@ export default async function Home() {
 
                     {news.length > 0 ? (
                         <Reveal delay={0.15}>
-                            <NewsCarousel items={news as any} />
+                            <NewsShowcase items={news as any} />
                         </Reveal>
                     ) : (
                         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-stone-300">
