@@ -99,3 +99,21 @@ export async function getMembers() {
         return [];
     }
 }
+
+// Toplu sıra güncelleme (admin'de yukarı/aşağı taşıma için)
+export async function updateMembersOrder(items: { id: string; order: number }[]) {
+    try {
+        await requireAdmin();
+        await prisma.$transaction(
+            items.map((i) =>
+                prisma.boardMember.update({ where: { id: i.id }, data: { order: i.order } })
+            )
+        );
+        revalidatePath('/yonetim');
+        revalidatePath('/admin/members');
+        return { success: true };
+    } catch (error) {
+        console.error("Sıra güncelleme hatası:", error);
+        return { success: false, error: "Sıra güncellenemedi." };
+    }
+}

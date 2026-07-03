@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { getMembers, deleteMember } from "@/actions/member-actions";
+import { getMembers, deleteMember, updateMembersOrder } from "@/actions/member-actions";
 import { Button } from "@/components/ui/button";
-import { Plus, Users, Edit, Trash2, GripVertical } from "lucide-react";
+import { Plus, Edit, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import MemberForm from "./_components/member-form";
@@ -59,6 +59,35 @@ export default function AdminMembersPage() {
     function handleEdit(member: any) {
         setEditingMember(member);
         setIsSheetOpen(true);
+    }
+
+    // Aynı grup + aynı statü (asil/yedek) içinde üyeyi yukarı/aşağı taşı
+    async function handleMove(member: any, dir: -1 | 1) {
+        const sub = members
+            .filter((m) => m.type === member.type && (m.status === "yedek") === (member.status === "yedek"))
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        const idx = sub.findIndex((m) => m.id === member.id);
+        const target = idx + dir;
+        if (target < 0 || target >= sub.length) return;
+
+        // Yer değiştir ve tüm alt grubu 0..n sırayla normalize et
+        const reordered = [...sub];
+        [reordered[idx], reordered[target]] = [reordered[target], reordered[idx]];
+        const updates = reordered.map((m, i) => ({ id: m.id, order: i }));
+
+        // Optimistik güncelleme
+        setMembers((prev) =>
+            prev.map((m) => {
+                const u = updates.find((x) => x.id === m.id);
+                return u ? { ...m, order: u.order } : m;
+            })
+        );
+
+        const res = await updateMembersOrder(updates);
+        if (!res.success) {
+            toast.error("Sıra güncellenemedi.");
+            loadMembers();
+        }
     }
 
     return (
@@ -133,9 +162,35 @@ export default function AdminMembersPage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {groupMembers.map((member) => (
+                                        {groupMembers.map((member) => {
+                                            const sub = groupMembers.filter(
+                                                (m) => (m.status === "yedek") === (member.status === "yedek")
+                                            );
+                                            const subIdx = sub.findIndex((m) => m.id === member.id);
+                                            const isFirst = subIdx === 0;
+                                            const isLast = subIdx === sub.length - 1;
+                                            return (
                                             <TableRow key={member.id}>
-                                                <TableCell className="font-mono text-slate-400">{member.order}</TableCell>
+                                                <TableCell>
+                                                    <div className="flex flex-col">
+                                                        <button
+                                                            onClick={() => handleMove(member, -1)}
+                                                            disabled={isFirst}
+                                                            title="Yukarı taşı"
+                                                            className="text-slate-400 hover:text-red-900 disabled:opacity-20 disabled:hover:text-slate-400"
+                                                        >
+                                                            <ChevronUp className="h-4 w-4" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleMove(member, 1)}
+                                                            disabled={isLast}
+                                                            title="Aşağı taşı"
+                                                            className="text-slate-400 hover:text-red-900 disabled:opacity-20 disabled:hover:text-slate-400"
+                                                        >
+                                                            <ChevronDown className="h-4 w-4" />
+                                                        </button>
+                                                    </div>
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center gap-3">
                                                         <Avatar className="h-10 w-10 border border-slate-100">
@@ -169,7 +224,8 @@ export default function AdminMembersPage() {
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                            );
+                                        })}
                                     </TableBody>
                                 </Table>
                             </div>

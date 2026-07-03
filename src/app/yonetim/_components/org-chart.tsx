@@ -111,6 +111,47 @@ function PersonCard({
     );
 }
 
+// Kurul listelerinde 6'lı dizilim için kompakt dikey kart
+function CompactMemberCard({
+    member,
+    onPhotoClick,
+}: {
+    member: Member;
+    onPhotoClick?: (member: Member) => void;
+}) {
+    return (
+        <div className="relative flex h-full flex-col items-center rounded-2xl border border-slate-200 bg-white p-3 text-center shadow-sm transition-all hover:border-primary/40 hover:shadow-md">
+            {member.status === "yedek" && (
+                <span className="absolute right-2 top-2 rounded-full border border-slate-300 bg-white px-1.5 py-0.5 text-[8px] font-semibold text-slate-500">
+                    Yedek
+                </span>
+            )}
+            <button
+                type="button"
+                title="Fotoğrafı büyüt"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onPhotoClick?.(member);
+                }}
+                className="mb-2 flex h-16 w-16 shrink-0 cursor-zoom-in items-center justify-center overflow-hidden rounded-full border border-slate-100 bg-slate-50 ring-offset-2 transition hover:ring-2 hover:ring-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+                {member.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={member.image} alt={member.name} className="h-full w-full object-cover object-top" />
+                ) : (
+                    <span className="font-semibold text-slate-400">
+                        {initials(member.name)}
+                    </span>
+                )}
+            </button>
+            <p className="text-[9px] font-bold uppercase leading-tight tracking-wide text-primary">
+                {member.role}
+            </p>
+            <p className="mt-0.5 text-xs font-bold leading-snug text-slate-900">{member.name}</p>
+        </div>
+    );
+}
+
 function KurulSection({
     title,
     members,
@@ -125,39 +166,43 @@ function KurulSection({
     const yedek = members.filter((m) => m.status === "yedek").sort((a, b) => a.order - b.order);
 
     const Grid = ({ items }: { items: Member[] }) => (
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-3">
             {items.map((m) => (
-                <div key={m.id} className="w-full sm:w-[300px]">
-                    <PersonCard member={m} variant="small" onPhotoClick={onPhotoClick} />
+                <div key={m.id} className="w-[140px] sm:w-[150px]">
+                    <CompactMemberCard member={m} onPhotoClick={onPhotoClick} />
                 </div>
             ))}
         </div>
     );
 
     return (
-        <div className="mt-12 w-full">
-            <div className="mb-6 flex items-center justify-center gap-4">
-                <div className="h-px w-10 bg-slate-300" />
-                <span className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
+        <div className="mt-16 w-full">
+            <div className="mb-8 flex items-center justify-center gap-4">
+                <div className="h-px w-12 bg-primary/30" />
+                <h2 className="font-serif text-xl font-bold uppercase tracking-[0.15em] text-[#1A202C] md:text-2xl">
                     {title}
-                </span>
-                <div className="h-px w-10 bg-slate-300" />
+                </h2>
+                <div className="h-px w-12 bg-primary/30" />
             </div>
             {asil.length > 0 && (
-                <div className="mb-5">
+                <div className="mb-6">
                     {yedek.length > 0 && (
-                        <p className="mb-2 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                            Asil Üyeler
-                        </p>
+                        <div className="mb-4 flex justify-center">
+                            <span className="rounded-full bg-primary px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-white shadow-sm">
+                                Asil Üyeler
+                            </span>
+                        </div>
                     )}
                     <Grid items={asil} />
                 </div>
             )}
             {yedek.length > 0 && (
                 <div>
-                    <p className="mb-2 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                        Yedek Üyeler
-                    </p>
+                    <div className="mb-4 flex justify-center">
+                        <span className="rounded-full border border-slate-300 bg-white px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500 shadow-sm">
+                            Yedek Üyeler
+                        </span>
+                    </div>
                     <Grid items={yedek} />
                 </div>
             )}
