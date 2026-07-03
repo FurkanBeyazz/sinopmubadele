@@ -30,6 +30,7 @@ interface NewsDetailClientProps {
 
 export default function NewsDetailClient({ post }: NewsDetailClientProps) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
     const [scrolled, setScrolled] = useState(false);
     const [currentUrl, setCurrentUrl] = useState("");
 
@@ -151,7 +152,7 @@ export default function NewsDetailClient({ post }: NewsDetailClientProps) {
 
                         {/* Featured Image with Lightbox */}
                         {post.image && (
-                            <figure className="mb-12 -mx-4 md:-mx-12 cursor-zoom-in group relative select-none" onClick={() => setLightboxOpen(true)}>
+                            <figure className="mb-12 -mx-4 md:-mx-12 cursor-zoom-in group relative select-none" onClick={() => { setLightboxIndex(0); setLightboxOpen(true); }}>
                                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lg border border-slate-100">
                                     <Image
                                         src={post.image}
@@ -217,9 +218,9 @@ export default function NewsDetailClient({ post }: NewsDetailClientProps) {
                                 key={index}
                                 className="relative aspect-square rounded-2xl overflow-hidden shadow-sm group bg-slate-100 cursor-pointer"
                                 onClick={() => {
+                                    // Slaytlar [kapak, ...galeri] sırasında; kapak varsa +1 kaydır
+                                    setLightboxIndex((post.image ? 1 : 0) + index);
                                     setLightboxOpen(true);
-                                    // Lightbox slides güncellemesi gerekebilir ama şimdilik sadece açalım
-                                    // Mevcut lightbox implementation tek slide alıyor gibi duruyor altta.
                                 }}
                             >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -239,6 +240,7 @@ export default function NewsDetailClient({ post }: NewsDetailClientProps) {
             {/* Global Lightbox Component - Updated to include gallery images */}
             <Lightbox
                 open={lightboxOpen}
+                index={lightboxIndex}
                 close={() => setLightboxOpen(false)}
                 slides={[
                     ...(post.image ? [{ src: post.image }] : []),
