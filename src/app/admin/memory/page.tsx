@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { UploadButton } from '@/utils/uploadthing';
+import LocalMultiUpload from '@/components/admin/local-multi-upload';
 import { Trash2, Plus, Loader2, Camera, Images, Settings2 } from 'lucide-react';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -44,7 +44,6 @@ export default function MemoryAdminPage() {
 
     // Yeni Anı Formu
     const [newMemoryData, setNewMemoryData] = useState({ visitorName: '', note: '' });
-    const [uploadPct, setUploadPct] = useState<number | null>(null);
 
     const loadMemories = async () => {
         setIsLoading(true);
@@ -171,25 +170,25 @@ export default function MemoryAdminPage() {
                                     </div>
                                 ) : (
                                     <div className="border-2 border-dashed border-slate-300 p-6 rounded-xl bg-slate-50 transition-colors hover:bg-slate-100">
-                                        <UploadButton
-                                            endpoint="bulkImageUploader"
-                                            onUploadProgress={(p) => setUploadPct(Math.round(p))}
-                                            onUploadBegin={() => setUploadPct(0)}
-                                            onClientUploadComplete={async (res) => {
-                                                setUploadPct(null);
-                                                if (!res || res.length === 0) return;
+                                        <LocalMultiUpload
+                                            disabled={isCreating}
+                                            onUrls={async (urls) => {
+                                                if (urls.length === 0) {
+                                                    toast.error('Hiçbir fotoğraf yüklenemedi.');
+                                                    return;
+                                                }
                                                 setIsCreating(true);
                                                 try {
                                                     const visitorName = newMemoryData.visitorName;
                                                     const note = newMemoryData.note;
                                                     const results = await Promise.all(
-                                                        res.map((file) =>
-                                                            createMemory({ visitorName, note: note || undefined, image: file.url })
+                                                        urls.map((url) =>
+                                                            createMemory({ visitorName, note: note || undefined, image: url })
                                                         )
                                                     );
                                                     const failedCount = results.filter((r) => !r.success).length;
                                                     if (failedCount > 0) throw new Error(`${failedCount} kayıt oluşturulamadı.`);
-                                                    toast.success(`${res.length} fotoğraf "${visitorName}" albümüne eklendi!`);
+                                                    toast.success(`${urls.length} fotoğraf "${visitorName}" albümüne eklendi!`);
                                                     setNewMemoryData({ visitorName: '', note: '' });
                                                     await loadMemories();
                                                     router.refresh();
@@ -200,31 +199,8 @@ export default function MemoryAdminPage() {
                                                     setIsCreating(false);
                                                 }
                                             }}
-                                            onUploadError={(error: Error) => { setUploadPct(null); toast.error(`Yükleme hatası: ${error.message}`); }}
-                                            appearance={{
-                                                button: "bg-red-900 text-white hover:bg-red-800 w-full rounded-md shadow-sm h-12 font-bold text-lg",
-                                                allowedContent: "hidden",
-                                            }}
-                                            content={{
-                                                button({ ready, isUploading }) {
-                                                    if (isUploading) return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Yükleniyor %{uploadPct ?? 0}</>;
-                                                    if (ready) return <><Camera className="mr-2 h-5 w-5" /> Fotoğrafları Seç</>;
-                                                    return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Hazırlanıyor...</>;
-                                                },
-                                            }}
                                         />
-                                        {uploadPct !== null && (
-                                            <div className="mt-3">
-                                                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                                                    <div
-                                                        className="h-full rounded-full bg-red-900 transition-all duration-200"
-                                                        style={{ width: `${uploadPct}%` }}
-                                                    />
-                                                </div>
-                                                <p className="mt-1 text-center text-xs font-bold text-slate-500">%{uploadPct}</p>
-                                            </div>
-                                        )}
-                                        <p className="text-xs text-slate-400 mt-2 font-medium text-center">Ctrl tuşu ile birden fazla fotoğraf seçebilirsiniz.</p>
+                                        <p className="text-xs text-slate-400 mt-2 font-medium text-center">Ctrl / Shift ile birden fazla fotoğraf seçebilirsiniz.</p>
                                     </div>
                                 )}
                             </div>
