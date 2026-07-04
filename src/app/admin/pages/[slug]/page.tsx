@@ -183,12 +183,27 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                                     multiple={false}
                                     buttonLabel="Panorama Fotoğrafı Seç"
                                     onUrls={(urls) => {
-                                        if (urls[0]) {
-                                            setPanoramaImage(urls[0]);
-                                            toast.success("Sanal tur görseli yüklendi.");
-                                        } else {
+                                        const url = urls[0];
+                                        if (!url) {
                                             toast.error("Görsel yüklenemedi.");
+                                            return;
                                         }
+                                        setPanoramaImage(url);
+                                        toast.success("Sanal tur görseli yüklendi.");
+
+                                        // Oran kontrolü: equirectangular panorama tam 2:1 olmalı.
+                                        // Yanlış oranda yüklenirse 360° görünüm bozuk/gerilmiş görünür.
+                                        const img = new window.Image();
+                                        img.onload = () => {
+                                            const ratio = img.naturalWidth / img.naturalHeight;
+                                            if (ratio < 1.85 || ratio > 2.15) {
+                                                toast.warning(
+                                                    `Dikkat: Fotoğrafın oranı ${ratio.toFixed(2)}:1 — 360° panorama için 2:1 (örn. 4000x2000) olmalı. Bu fotoğraf sitede gerilmiş/bozuk görünebilir. Birleştirme programınızdan "eşdikdörtgen (equirectangular) 2:1" formatında dışa aktarmayı deneyin.`,
+                                                    { duration: 10000 }
+                                                );
+                                            }
+                                        };
+                                        img.src = url;
                                     }}
                                 />
                             )}
