@@ -12,10 +12,13 @@ export default function LocalMultiUpload({
     onUrls,
     disabled,
     buttonLabel = 'Fotoğrafları Seç',
+    multiple = true,
 }: {
     onUrls: (urls: string[]) => void | Promise<void>;
     disabled?: boolean;
     buttonLabel?: string;
+    /** false verilirse tek dosya seçimine kısıtlanır (örn. kapak/panorama görseli) */
+    multiple?: boolean;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [busy, setBusy] = useState(false);
@@ -82,7 +85,7 @@ export default function LocalMultiUpload({
                 ref={inputRef}
                 type="file"
                 accept="image/*"
-                multiple
+                multiple={multiple}
                 hidden
                 onChange={(e) => e.target.files && handleFiles(e.target.files)}
             />

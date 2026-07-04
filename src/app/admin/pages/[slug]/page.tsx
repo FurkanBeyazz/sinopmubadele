@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { UploadDropzone } from "@/utils/uploadthing";
+import LocalMultiUpload from "@/components/admin/local-multi-upload";
 import { ArrowLeft, Loader2, Save, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -179,16 +179,16 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                                     </button>
                                 </div>
                             ) : (
-                                <UploadDropzone
-                                    endpoint="imageUploader" // Tek resim kabul eden endpoint
-                                    onClientUploadComplete={(res) => {
-                                        if (res && res[0]) {
-                                            setPanoramaImage(res[0].url);
+                                <LocalMultiUpload
+                                    multiple={false}
+                                    buttonLabel="Panorama Fotoğrafı Seç"
+                                    onUrls={(urls) => {
+                                        if (urls[0]) {
+                                            setPanoramaImage(urls[0]);
                                             toast.success("Sanal tur görseli yüklendi.");
+                                        } else {
+                                            toast.error("Görsel yüklenemedi.");
                                         }
-                                    }}
-                                    onUploadError={(error: Error) => {
-                                        toast.error(`Hata: ${error.message}`);
                                     }}
                                 />
                             )}
@@ -202,18 +202,14 @@ export default function EditPage({ params }: { params: { slug: string } }) {
 
                             {/* Yükleme Bölgesi */}
                             <div className="bg-white rounded-xl border border-dashed border-slate-300 p-4 mb-6">
-                                <UploadDropzone
-                                    endpoint="pageImageUploader"
-                                    config={{ mode: "auto" }}
-                                    onClientUploadComplete={(res) => {
-                                        if (res) {
-                                            const newImages = res.map((r) => r.url);
-                                            setImages((prev) => [...prev, ...newImages]);
-                                            toast.success(`${res.length} görsel albüme eklendi`);
+                                <LocalMultiUpload
+                                    onUrls={(urls) => {
+                                        if (urls.length > 0) {
+                                            setImages((prev) => [...prev, ...urls]);
+                                            toast.success(`${urls.length} görsel albüme eklendi`);
+                                        } else {
+                                            toast.error("Hiçbir görsel yüklenemedi.");
                                         }
-                                    }}
-                                    onUploadError={(error: Error) => {
-                                        toast.error(`Yükleme hatası: ${error.message}`);
                                     }}
                                 />
                             </div>

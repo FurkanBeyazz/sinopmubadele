@@ -16,7 +16,8 @@ import {
     ChevronRight,
     FileBox,
     Camera,
-    Landmark
+    Landmark,
+    Building2
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -40,6 +41,7 @@ const navItems = [
     { icon: Camera, label: 'Anı Köşesi', href: '/admin/memory' },
     { icon: FileText, label: 'Duyurular & Haberler', href: '/admin/posts' },
     { icon: ImageIcon, label: 'Fotoğraf Galerisi', href: '/admin/gallery' },
+    { icon: Building2, label: 'Kültür Evi', href: '/admin/pages/kultur-evi' },
     { icon: FileBox, label: 'Sayfa Ayarları', href: '/admin/pages' },
     { icon: Users, label: 'Yönetim Kurulu', href: '/admin/members' },
     { icon: Landmark, label: 'Atatürk Köşesi', href: '/admin/ataturk' },

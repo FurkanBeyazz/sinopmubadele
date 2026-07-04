@@ -210,19 +210,20 @@ export default function KulturEviClient({ pageData }: KulturEviClientProps) {
                         )}
 
                         {/* 4. Sanal Tur Entegrasyonu */}
-                        <div className="mt-12 pt-12 border-t border-slate-100">
-                            <div className="flex items-center gap-3 mb-6 text-primary-red">
-                                <div className="w-2 h-2 rounded-full bg-primary-red animate-pulse" />
-                                <h3 className="text-lg font-bold tracking-widest uppercase">360° Sanal Tur</h3>
+                        {pageData.panoramaImage && (
+                            <div className="mt-12 pt-12 border-t border-slate-100">
+                                <div className="flex items-center gap-3 mb-6 text-primary-red">
+                                    <div className="w-2 h-2 rounded-full bg-primary-red animate-pulse" />
+                                    <h3 className="text-lg font-bold tracking-widest uppercase">360° Sanal Tur</h3>
+                                </div>
+
+                                <VirtualTour imageUrl={pageData.panoramaImage} />
+
+                                <p className="text-center text-sm text-slate-400 mt-4">
+                                    Kültür Evi'ni oturduğunuz yerden 360 derece keşfedin.
+                                </p>
                             </div>
-
-                            {/* Demo görseli veya yüklenen görseli kullan */}
-                            <VirtualTour imageUrl="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/2294472375_24a3b8ef46_o.jpg" />
-
-                            <p className="text-center text-sm text-slate-400 mt-4">
-                                Kültür Evi'ni oturduğunuz yerden 360 derece keşfedin.
-                            </p>
-                        </div>
+                        )}
 
                         {/* Alt Bilgi / CTA */}
                         <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6">
