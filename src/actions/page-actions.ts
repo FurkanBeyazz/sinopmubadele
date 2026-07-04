@@ -51,7 +51,7 @@ export async function getPageBySlug(slug: string) {
     }
 }
 
-export async function updatePage(slug: string, data: { title: string; content: string; images?: string | string[] | any; panoramaImage?: string; heroImage?: string }) {
+export async function updatePage(slug: string, data: { title: string; content: string; images?: string | string[] | any; panoramaImage?: string | null; heroImage?: string | null }) {
     console.log(`[updatePage] Updating page ${slug} with title: ${data.title}`);
 
     try {

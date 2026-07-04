@@ -87,7 +87,8 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                 title,
                 content,
                 images: JSON.stringify(images),
-                panoramaImage: panoramaImage || undefined
+                // null gönder ki DB'deki değer temizlensin; undefined gönderirsek Prisma alanı hiç güncellemez
+                panoramaImage: panoramaImage,
             };
             const result = await updatePage(params.slug, payload);
             if (result.success) {
