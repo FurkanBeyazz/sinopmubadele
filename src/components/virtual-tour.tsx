@@ -14,7 +14,12 @@ function SpherePanorama({ imageUrl, onError, onLoaded }: { imageUrl: string; onE
     useEffect(() => {
         let cancelled = false;
         const loader = new THREE.TextureLoader();
-        loader.setCrossOrigin('anonymous');
+        // crossOrigin ayarı yalnızca dış (uploadthing vb.) URL'ler için gerekli.
+        // Kendi /uploads/ klasörümüz aynı origin — 'anonymous' verirsek Next.js
+        // CORS başlığı dönmediği için görsel yüklenmez.
+        if (/^https?:\/\//i.test(imageUrl)) {
+            loader.setCrossOrigin('anonymous');
+        }
 
         loader.load(
             imageUrl,
@@ -42,7 +47,9 @@ function SpherePanorama({ imageUrl, onError, onLoaded }: { imageUrl: string; onE
                 onLoaded();
             },
             undefined,
-            () => {
+            (err) => {
+                // Konsola detay bas — teşhis için kritik
+                console.error('[VirtualTour] Panorama yükleme başarısız:', imageUrl, err);
                 if (!cancelled) onError();
             }
         );
